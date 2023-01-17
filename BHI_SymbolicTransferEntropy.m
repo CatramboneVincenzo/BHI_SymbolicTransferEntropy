@@ -2,8 +2,8 @@ function [STE, SEx, SEy, Len] = BHI_SymbolicTransferEntropy(x, y, N_labels1, N_l
 % Brain-Heart Iinterplay Symbolic Transfer Entropy with permutation statistics
 % output variables:
 % STE = Symbolic Transfer Entropy
-% SEx = Entropy rate of variable x
-% SEy = Entropy rate of variable y
+% SEx = Self Entropy of variable x
+% SEy = Self Entropy of variable y
 % Len = length of the input series
 % Input variables:
 % x = vector of N samples (symbolic vector)
