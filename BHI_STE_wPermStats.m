@@ -1,4 +1,4 @@
-function [STE, Ex, Ey, pVs] = BHI_STE_wPermStats(x, y, N_labels1, N_labels2, significance, Nperm)
+function [STE, SEx, SEy, pVs] = BHI_STE_wPermStats(x, y, N_labels1, N_labels2, significance, Nperm)
 % Brain-Heart Iinterplay Symbolic Transfer Entropy with permutation statistics
 % output variables:
 % STE = Symbolic Transfer Entropy
@@ -18,7 +18,7 @@ function [STE, Ex, Ey, pVs] = BHI_STE_wPermStats(x, y, N_labels1, N_labels2, sig
 % Catrambone Vincenzo, and Valenza Gaetano
 % Transaction of Biomedical Engineering, 2023
 
-    [STE, Ex, Ey, ~] = BHI_SymbolicTransferEntropy(x, y, N_labels1, N_labels2);
+    [STE, SEx, SEy, ~] = BHI_SymbolicTransferEntropy(x, y, N_labels1, N_labels2);
         
     if significance
         STEp = zeros(Nperm,2);

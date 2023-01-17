@@ -1,9 +1,9 @@
-function [STE, Ex, Ey, Len] = BHI_SymbolicTransferEntropy(x, y, N_labels1, N_labels2)
+function [STE, SEx, SEy, Len] = BHI_SymbolicTransferEntropy(x, y, N_labels1, N_labels2)
 % Brain-Heart Iinterplay Symbolic Transfer Entropy with permutation statistics
 % output variables:
 % STE = Symbolic Transfer Entropy
-% Ex = Entropy rate of variable x
-% Ey = Entropy rate of variable y
+% SEx = Entropy rate of variable x
+% SEy = Entropy rate of variable y
 % Len = length of the input series
 % Input variables:
 % x = vector of N samples (symbolic vector)
@@ -48,6 +48,12 @@ function [STE, Ex, Ey, Len] = BHI_SymbolicTransferEntropy(x, y, N_labels1, N_lab
         aa(rr_sym_k(ii,1),rr_sym_k(ii,2),rr_sym_k(ii,3)) = 0;
     end
 
+    p_x = accumarray(micro(4:end),1)/size(micro(4:end),1);
+    p_x = p_x(:);
+    
+    p_y = accumarray(rr_sym(4:end),1)/size(rr_sym(4:end),1);
+    p_y = p_y(:);
+    
     p_xk = accumarray(micro_k_sym,1)/size(micro_k_sym,1);
     p_xk = p_xk(:);
     
@@ -64,30 +70,32 @@ function [STE, Ex, Ey, Len] = BHI_SymbolicTransferEntropy(x, y, N_labels1, N_lab
     p_y_yk_xk = accumarray([rr_sym(4:end) rr_sym_k_sym(1:end-1) micro_k_sym(1:end-1)],1)/(size(rr_sym,1)-3);
       
 
-    TE_y_x = 0; 
-    TE_x_y = 0;
-    Ex = 0;
-    Ey = 0;
+    STE_y_x = 0; 
+    STE_x_y = 0;
+    SEx = 0;
+    SEy = 0;
     for ii = 1:length(micro_k_sym)-1
         p3 = p_x_xk_yk(micro(ii+3),micro_k_sym(ii),rr_sym_k_sym(ii));
         p21 = p_xk_yk(micro_k_sym(ii),rr_sym_k_sym(ii));
         p1 = p_xk(micro_k_sym(ii));
         p22 = p_x_xk(micro(ii+3),micro_k_sym(ii));
+        p2 = p_x(micro(ii+3));
         if (p3*log(p3/p21*p1/p22))>=0
-            TE_y_x = TE_y_x + p3*log(p3/p21*p1/p22); 
+            STE_y_x = STE_y_x + p3*log(p3/p21*p1/p22); 
         end
-        Ex = Ex - p22*log(p22/p1);
+        SEx = SEx + p22*log(p22/(p1*p2));
         
         p3 = p_y_yk_xk(rr_sym(ii+3),rr_sym_k_sym(ii),micro_k_sym(ii));
         p21 = p_yk_xk(rr_sym_k_sym(ii),micro_k_sym(ii));
         p1 = p_yk(rr_sym_k_sym(ii));
         p22 = p_y_yk(rr_sym(ii+3),rr_sym_k_sym(ii));
+        p2 = p_y(rr_sym(ii+3));
         if (p3*log(p3/p21*p1/p22))>=0
-            TE_x_y = TE_x_y + p3*log(p3/p21*p1/p22);
+            STE_x_y = STE_x_y + p3*log(p3/p21*p1/p22);
         end
-        Ey = Ey - p22*log(p22/p1);
+        SEy = SEy + p22*log(p22/(p1*p2));
     end
 
-    STE = [TE_y_x TE_x_y];
+    STE = [STE_y_x STE_x_y];
 end
 
